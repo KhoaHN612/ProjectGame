@@ -15,11 +15,11 @@ public class GrandSlimeBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+ /*   private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
             body.velocity = new Vector2(body.velocity.x, 10);
         }
-    }
+    }*/
 }

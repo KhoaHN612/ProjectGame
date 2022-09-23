@@ -9,9 +9,12 @@ public class PlayerBehavior : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private int jumpTimeLimit;
     [SerializeField] private int jumpTime = 0;
+    [SerializeField] private float LimitCooldownAttackTime;
+    [SerializeField] private float CooldownAttackTime;
     private Rigidbody2D body;
     private Animator anim;
     private bool grounded;
+    private bool attacking = false;
 
     private void Awake()
     {
@@ -20,7 +23,7 @@ public class PlayerBehavior : MonoBehaviour
     }
 
     private void Update()
-    { 
+    {
         float bodyMove = Input.GetAxis("Horizontal");
         body.velocity = new Vector2(bodyMove * speed, body.velocity.y);
 
@@ -35,8 +38,20 @@ public class PlayerBehavior : MonoBehaviour
         if (Input.GetKey(KeyCode.L))
             body.velocity = new Vector2(MathF.Sign(bodyMove) * speed * 3, body.velocity.y);
 
-        if (Input.GetKey(KeyCode.J))
-            anim.SetTrigger("attack");
+        if (Input.GetKey(KeyCode.J) && (attacking == false))
+            Attack();
+
+        if (attacking)
+        {
+            Debug.Log(attacking);
+            CooldownAttackTime += Time.deltaTime;
+
+            if (CooldownAttackTime >= LimitCooldownAttackTime)
+            {
+                CooldownAttackTime = 0;
+                attacking = false;
+            }
+        }
 
         anim.SetBool("run", bodyMove != 0);
         anim.SetBool("grounded", grounded);
@@ -55,5 +70,10 @@ public class PlayerBehavior : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
             grounded = true;
         jumpTime = 0;
+    }
+    private void Attack()
+    {
+        attacking = true;
+        anim.SetTrigger("attack");
     }
 }
