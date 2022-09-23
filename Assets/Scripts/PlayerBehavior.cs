@@ -19,14 +19,14 @@ public class PlayerBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     { 
         float bodyMove = Input.GetAxis("Horizontal");
         body.velocity = new Vector2(bodyMove * speed, body.velocity.y);
 
-        if (bodyMove > 0.01f)
+        if (bodyMove > 0.1f)
             transform.localScale = new Vector3(1, 1, 1);
-        else if (bodyMove < 0.01f)
+        else if (bodyMove < -0.1f)
             transform.localScale = new Vector3(-1,1,1);
 
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.K)) && (jumpTime < jumpTimeLimit))
@@ -34,6 +34,9 @@ public class PlayerBehavior : MonoBehaviour
 
         if (Input.GetKey(KeyCode.L))
             body.velocity = new Vector2(MathF.Sign(bodyMove) * speed * 3, body.velocity.y);
+
+        if (Input.GetKey(KeyCode.J))
+            anim.SetTrigger("attack");
 
         anim.SetBool("run", bodyMove != 0);
         anim.SetBool("grounded", grounded);
